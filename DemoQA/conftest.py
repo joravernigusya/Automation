@@ -10,4 +10,3 @@ def driver():
     yield
     driver.close()
     driver.quit()
-

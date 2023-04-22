@@ -20,7 +20,8 @@ class BasePage:
         :return: элемент, если он найден и видимый на странице
         """
         return wait(self.driver, timeout).until(
-            EC.visibility_of_element_located(locator))
+            EC.visibility_of_element_located(locator)
+        )
 
     def elements_are_visible(self, locator, timeout=5):
         """
@@ -32,7 +33,8 @@ class BasePage:
         :return: список элементов, если они найдены и видимы на странице
         """
         return wait(self.driver, timeout).until(
-            EC.visibility_of_all_elements_located(locator))
+            EC.visibility_of_all_elements_located(locator)
+        )
 
     def element_is_present(self, locator, timeout=5):
         """
@@ -42,8 +44,7 @@ class BasePage:
         элементов
         :return: элемент, если он присутствует на странице
         """
-        return wait(self.driver, timeout).until(
-            EC.presence_of_element_located(locator))
+        return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
 
     def elements_are_present(self, locator, timeout=5):
         """
@@ -54,7 +55,8 @@ class BasePage:
         :return: cписок элементов, если они присутствуют на странице
         """
         return wait(self.driver, timeout).until(
-            EC.presence_of_all_elements_located(locator))
+            EC.presence_of_all_elements_located(locator)
+        )
 
     def elements_is_not_visible(self, locator, timeout=5):
         """
@@ -66,7 +68,8 @@ class BasePage:
         генерируется исключение
         """
         return wait(self.driver, timeout).until(
-            EC.invisibility_of_element_located(locator))
+            EC.invisibility_of_element_located(locator)
+        )
 
     def elements_is_clickable(self, locator, timeout=5):
         """
@@ -76,8 +79,7 @@ class BasePage:
         элементов
         :return: элемент, если он кликабелен, иначе генерируется исключение
         """
-        return wait(self.driver, timeout).until(
-            EC.element_to_be_clickable(locator))
+        return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):
         """
