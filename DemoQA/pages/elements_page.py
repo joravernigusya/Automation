@@ -8,14 +8,17 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
     заполнения полей формы и проверки правильности заполнения формы
     """
 
-    def fill_all_fields(self):
+    def fill_all_fields(self, full_name, email, current_address,
+                        permanent_address):
         """
         Функция заполняет все поля на странице веб-формы и отправляет ее
         """
-        self.element_is_visible(self.FULL_NAME).send_keys("Yan")
-        self.element_is_visible(self.EMAIL).send_keys("yan@gmail.com")
-        self.element_is_visible(self.CURRENT_ADDRESS).send_keys("Moscow")
-        self.element_is_visible(self.PERMANENT_ADDRESS).send_keys("Moscow")
+        self.element_is_visible(self.FULL_NAME).send_keys(full_name)
+        self.element_is_visible(self.EMAIL).send_keys(email)
+        self.element_is_visible(self.CURRENT_ADDRESS).send_keys(
+            current_address)
+        self.element_is_visible(self.PERMANENT_ADDRESS).send_keys(
+            permanent_address)
         self.element_is_visible(self.SUBMIT).click()
 
     def check_filled_form(self):
