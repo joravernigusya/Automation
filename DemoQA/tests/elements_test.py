@@ -5,7 +5,7 @@ class TestElements:
     class TestTextBox:
         def test_text_box(self, driver):
             """
-            Функция открывает страницу "https://demoqa.com/text-box",
+            Тест открывает страницу "https://demoqa.com/text-box",
             заполняет все поля на странице, проверяет заполнение формы и
             выводит результаты в командной строке.
             """

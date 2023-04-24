@@ -8,6 +8,7 @@ class BasePage:
     Класс определяет базовую страницу, которая содержит методы для работы с
     веб-элементами
     """
+
     def __init__(self, driver, url):
         self.driver = driver
         self.url = url
