@@ -2,7 +2,6 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-
 class BasePage:
     """
     Класс определяет базовую страницу, которая содержит методы для работы с
@@ -49,7 +48,8 @@ class BasePage:
         элементов
         :return: элемент, если он присутствует на странице
         """
-        return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+        return wait(self.driver, timeout).until(
+            EC.presence_of_element_located(locator))
 
     def elements_are_present(self, locator, timeout=5):
         """
@@ -84,7 +84,8 @@ class BasePage:
         элементов
         :return: элемент, если он кликабелен, иначе генерируется исключение
         """
-        return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+        return wait(self.driver, timeout).until(
+            EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):
         """
@@ -92,4 +93,4 @@ class BasePage:
         :param element:  элемент, к которому нужно прокрутить страницу
         :return: не возвращает никакого значения
         """
-        self.driver.execute_script("argument[0].scrollIntoView;", element)
+        self.driver.execute_script("arguments[0].scrollIntoView;", element)
