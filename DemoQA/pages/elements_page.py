@@ -12,18 +12,31 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
     заполнения полей формы и проверки правильности заполнения формы
     """
 
+    def set_value(self, locator, value):
+        """
+        Метод устанавливает значение атрибута value для элемента, заданного
+        локатором.
+        """
+        element = self.element_is_visible(locator)
+        self.driver.execute_script(f"arguments[0].value = '{value}';", element)
+
+    def get_attribute(self, locator, attribute_name):
+        """
+        Метод получает значение заданного атрибута элемента, заданного
+        локатором.
+        """
+        element = self.element_is_visible(locator)
+        return element.get_attribute(attribute_name)
+
     def fill_all_fields(self, full_name, email, current_address,
                         permanent_address):
         """
-        Метод заполняет все поля на странице веб-формы и отправляет ее
+        Метод заполняет все поля на странице веб-формы и отправляет ее.
         """
-        self.element_is_visible(self.FULL_NAME).send_keys(
-            full_name)
-        self.element_is_visible(self.EMAIL).send_keys(email)
-        self.element_is_visible(self.CURRENT_ADDRESS).send_keys(
-            current_address)
-        self.element_is_visible(self.PERMANENT_ADDRESS).send_keys(
-            permanent_address)
+        self.set_value(self.FULL_NAME, full_name)
+        self.set_value(self.EMAIL, email)
+        self.set_value(self.CURRENT_ADDRESS, current_address)
+        self.set_value(self.PERMANENT_ADDRESS, permanent_address)
         self.element_is_visible(self.SUBMIT).click()
 
     def check_filled_form(self):
@@ -31,12 +44,12 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
         Метод проверяет, заполнены ли все поля формы. Возвращает значения
         полей ФИО, электронной почты, текущего адреса и постоянного адреса.
         """
-        full_name = self.element_is_present(self.CREATED_FULL_NAME).text
-        email = self.element_is_present(self.CREATED_EMAIL).text
-        current_address = self.element_is_present(
-            self.CREATED_CURRENT_ADDRESS).text
-        permanent_address = self.element_is_present(
-            self.CREATED_PERMANENT_ADDRESS).text
+        full_name = self.get_attribute(self.CREATED_FULL_NAME, "innerHTML")
+        email = self.get_attribute(self.CREATED_EMAIL, "innerHTML")
+        current_address = self.get_attribute(self.CREATED_CURRENT_ADDRESS,
+                                             "innerHTML")
+        permanent_address = self.get_attribute(self.CREATED_PERMANENT_ADDRESS,
+                                               "innerHTML")
         return full_name, email, current_address, permanent_address
 
 

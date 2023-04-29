@@ -94,3 +94,15 @@ class BasePage:
         :return: не возвращает никакого значения
         """
         self.driver.execute_script("arguments[0].scrollIntoView;", element)
+
+    def get_input_text(self, locator):
+        """
+        Метод возвращает текст, введенный в поле ввода, указанного локатора.
+        """
+        return self.element_is_visible(locator).get_attribute("value")
+
+    def get_attribute_value(self, locator, attribute):
+        """
+        Метод возвращает значение указанного атрибута для элемента с заданным локатором.
+        """
+        return self.element_is_visible(locator).get_attribute(attribute)
