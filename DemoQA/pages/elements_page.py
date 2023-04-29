@@ -1,7 +1,8 @@
 import random
 from DemoQA.locators.elements_page_locators import (
     TextBoxPageLocators,
-    CheckBoxLocators
+    CheckBoxLocators,
+    RadioButtonPageLocators
 )
 from DemoQA.pages.base_page import BasePage
 
@@ -88,3 +89,20 @@ class CheckBoxPage(BasePage, CheckBoxLocators):
         for item in result_list:
             data.append(item.text)
         return str(data).replace(' ', '').lower()
+
+
+class RadioButtonPage(BasePage, RadioButtonPageLocators):
+    def click_on_the_radio_button(self, choice):
+        """
+        Метод для щелчка по радиокнопке на странице.
+        """
+        choices = {'yes': self.YES_RADIO_BUTTON,
+                   'impressive': self.IMPRESSIVE_RADIO_BUTTON,
+                   'no': self.NO_RADIO_BUTTON}
+        self.element_is_visible(choices[choice]).click()
+
+    def get_output_result(self):
+        """
+        Метод для получения результата вывода на странице.
+        """
+        return self.element_is_present(self.OUTPUT_RESULT).text
