@@ -1,6 +1,6 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 
 
 class BasePage:
@@ -49,7 +49,8 @@ class BasePage:
         элементов
         :return: элемент, если он присутствует на странице
         """
-        return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+        return wait(self.driver, timeout).until(
+            EC.presence_of_element_located(locator))
 
     def elements_are_present(self, locator, timeout=5):
         """
@@ -84,7 +85,8 @@ class BasePage:
         элементов
         :return: элемент, если он кликабелен, иначе генерируется исключение
         """
-        return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+        return wait(self.driver, timeout).until(
+            EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):
         """
@@ -92,4 +94,22 @@ class BasePage:
         :param element:  элемент, к которому нужно прокрутить страницу
         :return: не возвращает никакого значения
         """
-        self.driver.execute_script("argument[0].scrollIntoView;", element)
+        self.driver.execute_script("arguments[0].scrollIntoView;", element)
+
+    def get_input_text(self, locator):
+        """
+        Метод возвращает текст, введенный в поле ввода, указанного локатора.
+        """
+        return self.element_is_visible(locator).get_attribute("value")
+
+    def get_attribute_value(self, locator, attribute):
+        """
+        Метод возвращает значение указанного атрибута для элемента с заданным локатором.
+        """
+        return self.element_is_visible(locator).get_attribute(attribute)
+
+    def action_move_to_element(self, element):
+        # Перемещает указатель мыши к указанному элементу на веб-странице.
+        action = ActionChains(self.driver)
+        action.move_to_element(element)
+        action.perform()
