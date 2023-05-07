@@ -2,7 +2,8 @@ import random
 from DemoQA.locators.elements_page_locators import (
     TextBoxPageLocators,
     CheckBoxLocators,
-    RadioButtonPageLocators
+    RadioButtonPageLocators,
+    ButtonsPageLocators
 )
 from DemoQA.pages.base_page import BasePage
 
@@ -106,3 +107,31 @@ class RadioButtonPage(BasePage, RadioButtonPageLocators):
         Метод для получения результата вывода на странице.
         """
         return self.element_is_present(self.OUTPUT_RESULT).text
+
+
+class ButtonsPage(BasePage, ButtonsPageLocators):
+
+    def click_on_double_button(self):
+        # Метод производит двойной клик на элементе, который является
+        # видимым на странице.
+        self.action_double_click(
+            self.element_is_visible(self.DOUBLE_BUTTON))
+        return self.check_clicked_on_the_button(self.SUCCESS_DOUBLE)
+
+    def click_on_right_click_button(self):
+        # Метод производит клик правой кнопкой мыши на элементе, который
+        # является видимым на странице.
+        self.action_right_click(
+            self.element_is_visible(self.RIGHT_CLICK_BUTTON))
+        return self.check_clicked_on_the_button(self.SUCCESS_RIGHT)
+
+    def click_on_click_me_button(self):
+        # Метод производит клик на элементе, который является видимым на
+        # странице.
+        self.element_is_visible(self.CLICK_ME_BUTTON).click()
+        return self.check_clicked_on_the_button(self.SUCCESS_CLICK_ME)
+
+    def check_clicked_on_the_button(self, button_locator):
+        # Метод проверяет, был ли произведен клик на кнопке с указанным
+        # локатором и возвращает текст, который содержится в этой кнопке.
+        return self.element_is_present(button_locator).text

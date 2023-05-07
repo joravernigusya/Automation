@@ -104,7 +104,8 @@ class BasePage:
 
     def get_attribute_value(self, locator, attribute):
         """
-        Метод возвращает значение указанного атрибута для элемента с заданным локатором.
+        Метод возвращает значение указанного атрибута для элемента с заданным
+        локатором.
         """
         return self.element_is_visible(locator).get_attribute(attribute)
 
@@ -112,4 +113,16 @@ class BasePage:
         # Перемещает указатель мыши к указанному элементу на веб-странице.
         action = ActionChains(self.driver)
         action.move_to_element(element)
+        action.perform()
+
+    def action_double_click(self, element):
+        # Метод выполняет двойное нажатие левой кнопкой мыши.
+        action = ActionChains(self.driver)
+        action.double_click(element)
+        action.perform()
+
+    def action_right_click(self, element):
+        # Метод выполняет нажатие правой кнопкой мыши.
+        action = ActionChains(self.driver)
+        action.context_click(element)
         action.perform()

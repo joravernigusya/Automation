@@ -35,3 +35,14 @@ class RadioButtonPageLocators:
     NO_RADIO_BUTTON = (
         By.CSS_SELECTOR, "label[class^='custom-control'][for='noRadio']")
     OUTPUT_RESULT = (By.CSS_SELECTOR, "span[class='text-success']")
+
+
+class ButtonsPageLocators:
+    # Класс, определяющий локаторы элементов для старницы с кнопками.
+    DOUBLE_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    CLICK_ME_BUTTON = (By.XPATH, "//button[. = 'Click Me'] ")
+
+    SUCCESS_DOUBLE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    SUCCESS_RIGHT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    SUCCESS_CLICK_ME = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")

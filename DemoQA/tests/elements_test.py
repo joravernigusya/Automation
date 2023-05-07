@@ -3,8 +3,9 @@ import pytest
 from DemoQA.pages.elements_page import \
     (TextBoxPage,
      CheckBoxPage,
-     RadioButtonPage)
-
+     RadioButtonPage,
+     ButtonsPage
+     )
 
 
 class TestElements:
@@ -90,6 +91,25 @@ class TestElements:
             radio_button_page.click_on_the_radio_button("no")
             output_no = radio_button_page.get_output_result()
 
-            assert output_yes == "Yes", "Yes не выбран"
-            assert output_impressive == "Impressive", "Impressive не выбран"
-            assert output_no == "No", "No не выбран"
+            assert output_yes == "Yes", "'Yes' was not selected"
+            assert output_impressive == "Impressive", \
+                "'Impressive' was not selected"
+            assert output_no == "No", "'No' was not selected"
+
+    class TestButtonsPage:
+        def test_different_click_on_the_buttons(self, driver):
+            """
+            Тест открывает страницу "https://demoqa.com/buttons" и
+            проверяет корректность работы кнопок.
+            """
+            button_page = ButtonsPage(driver, 'https://demoqa.com/buttons')
+            button_page.open()
+            double_text = button_page.click_on_double_button()
+            right_text = button_page.click_on_right_click_button()
+            click_text = button_page.click_on_click_me_button()
+            assert double_text == "You have done a double click", \
+                "The double click button was not pressed"
+            assert right_text == "You have done a right click", \
+                "The right click button was not pressed"
+            assert click_text == "You have done a dynamic click", \
+                "The dynamic click button was not pressed"
