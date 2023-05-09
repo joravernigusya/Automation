@@ -1,11 +1,12 @@
 import time
 import pytest
-from DemoQA.pages.elements_page import \
-    (TextBoxPage,
-     CheckBoxPage,
-     RadioButtonPage,
-     ButtonsPage
-     )
+from DemoQA.pages.elements_page import (
+    TextBoxPage,
+    CheckBoxPage,
+    RadioButtonPage,
+    ButtonsPage,
+    WebTablePage,
+)
 
 
 class TestElements:
@@ -16,42 +17,29 @@ class TestElements:
             заполняет все поля на странице, проверяет заполнение формы и
             сверяет заполненные данные с данными, которые получились на выходе.
             """
-            # Входные данные
-            full_name = "Yan"
-            email = "yan@gmail.com"
-            current_address = "Msw"
-            permanent_address = "Msw"
-
-            # Инициализация страницы
             text_box_page = TextBoxPage(driver, "https://demoqa.com/text-box")
             text_box_page.open()
-
-            # Заполнение полей формы
-            text_box_page.set_value(text_box_page.FULL_NAME, full_name)
-            text_box_page.set_value(text_box_page.EMAIL, email)
-            text_box_page.set_value(text_box_page.CURRENT_ADDRESS,
-                                    current_address)
-            text_box_page.set_value(text_box_page.PERMANENT_ADDRESS,
-                                    permanent_address)
-            text_box_page.element_is_visible(text_box_page.SUBMIT).click()
-
-            # Получение заполненных данных
+            (
+                full_name,
+                email,
+                current_address,
+                permanent_address,
+            ) = text_box_page.fill_all_fields()
             (
                 output_name,
                 output_email,
                 output_cur_addr,
                 output_per_addr,
             ) = text_box_page.check_filled_form()
-
-            # Проверка заполненных данных
-            assert output_name == "Name:" + full_name, "Имя не совпадает"
-            assert output_email == "Email:" + email, "Почта не совпадает"
+            assert full_name == output_name, "The full name does not match"
+            assert email == output_email, "The email does not match"
+            assert current_address == output_cur_addr, (
+                "The current address " "does not match"
+            )
             assert (
-                    output_cur_addr.strip() == "Current Address :" + current_address
-            ), "Текущий адрес не совпадает"
-            assert (
-                    output_per_addr.strip() == "Permananet Address :" + permanent_address
-            ), "Постоянный адрес не совпадает"
+                    "Permananet Address :" + permanent_address ==
+                    output_per_addr
+            ), "The permanent address does not match"
 
     class TestCheckBox:
         def test_check_box(self, driver):
@@ -75,8 +63,9 @@ class TestElements:
             Тест открывает страницу "https://demoqa.com/radio-button" и
             проверяет функциональность радиокнопок.
             """
-            radio_button_page = RadioButtonPage(driver,
-                                                "https://demoqa.com/radio-button")
+            radio_button_page = RadioButtonPage(
+                driver, "https://demoqa.com/radio-button"
+            )
             radio_button_page.open()
 
             # Выбор кнопки "Yes" и проверка результата
@@ -92,8 +81,8 @@ class TestElements:
             output_no = radio_button_page.get_output_result()
 
             assert output_yes == "Yes", "'Yes' was not selected"
-            assert output_impressive == "Impressive", \
-                "'Impressive' was not selected"
+            assert output_impressive == "Impressive", "'Impressive' was not " \
+                                                      "selected"
             assert output_no == "No", "'No' was not selected"
 
     class TestButtonsPage:
@@ -102,14 +91,25 @@ class TestElements:
             Тест открывает страницу "https://demoqa.com/buttons" и
             проверяет корректность работы кнопок.
             """
-            button_page = ButtonsPage(driver, 'https://demoqa.com/buttons')
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
             button_page.open()
             double_text = button_page.click_on_double_button()
             right_text = button_page.click_on_right_click_button()
             click_text = button_page.click_on_click_me_button()
-            assert double_text == "You have done a double click", \
-                "The double click button was not pressed"
-            assert right_text == "You have done a right click", \
-                "The right click button was not pressed"
-            assert click_text == "You have done a dynamic click", \
-                "The dynamic click button was not pressed"
+            assert (
+                    double_text == "You have done a double click"
+            ), "The double click button was not pressed"
+            assert (
+                    right_text == "You have done a right click"
+            ), "The right click button was not pressed"
+            assert (
+                    click_text == "You have done a dynamic click"
+            ), "The dynamic click button was not pressed"
+
+    class TestWebTable:
+        def test_web_table_add_person(self, driver):
+            web_table_page = WebTablePage(driver,
+                                          "https://demoqa.com/webtables")
+            web_table_page.open()
+            web_table_page.add_new_person()
+

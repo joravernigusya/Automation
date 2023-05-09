@@ -1,9 +1,12 @@
 import random
+
+from DemoQA.generator.generator import generated_person
 from DemoQA.locators.elements_page_locators import (
     TextBoxPageLocators,
     CheckBoxLocators,
     RadioButtonPageLocators,
-    ButtonsPageLocators
+    ButtonsPageLocators,
+    WebTableLocators
 )
 from DemoQA.pages.base_page import BasePage
 
@@ -30,28 +33,37 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
         element = self.element_is_visible(locator)
         return element.get_attribute(attribute_name)
 
-    def fill_all_fields(self, full_name, email, current_address,
-                        permanent_address):
+    def fill_all_fields(self):
         """
         Метод заполняет все поля на странице веб-формы и отправляет ее.
         """
-        self.set_value(self.FULL_NAME, full_name)
-        self.set_value(self.EMAIL, email)
-        self.set_value(self.CURRENT_ADDRESS, current_address)
-        self.set_value(self.PERMANENT_ADDRESS, permanent_address)
+        person_info = next(generated_person())
+        full_name = person_info.full_name
+        email = person_info.email
+        current_address = person_info.current_address
+        permanent_address = person_info.permanent_address
+        self.element_is_visible(self.FULL_NAME).send_keys(full_name)
+        self.element_is_visible(self.EMAIL).send_keys(email)
+        self.element_is_visible(
+            self.CURRENT_ADDRESS).send_keys(current_address)
+        self.element_is_visible(
+            self.PERMANENT_ADDRESS).send_keys(permanent_address)
         self.element_is_visible(self.SUBMIT).click()
+        return full_name, email, current_address, permanent_address
 
     def check_filled_form(self):
         """
         Метод проверяет, заполнены ли все поля формы. Возвращает значения
         полей ФИО, электронной почты, текущего адреса и постоянного адреса.
         """
-        full_name = self.get_attribute(self.CREATED_FULL_NAME, "innerHTML")
-        email = self.get_attribute(self.CREATED_EMAIL, "innerHTML")
-        current_address = self.get_attribute(self.CREATED_CURRENT_ADDRESS,
-                                             "innerHTML")
-        permanent_address = self.get_attribute(self.CREATED_PERMANENT_ADDRESS,
-                                               "innerHTML")
+        full_name = \
+            self.element_is_present(self.CREATED_FULL_NAME).text.split(':')[1]
+        email = self.element_is_present(self.CREATED_EMAIL).text.split(':')[1]
+        current_address = \
+            self.element_is_present(self.CREATED_CURRENT_ADDRESS).text.split(
+                ':')[1]
+        permanent_address = self.element_is_present(
+            self.CREATED_PERMANENT_ADDRESS).text
         return full_name, email, current_address, permanent_address
 
 
@@ -135,3 +147,28 @@ class ButtonsPage(BasePage, ButtonsPageLocators):
         # Метод проверяет, был ли произведен клик на кнопке с указанным
         # локатором и возвращает текст, который содержится в этой кнопке.
         return self.element_is_present(button_locator).text
+
+
+class WebTablePage(BasePage, WebTableLocators):
+    def add_new_person(self):
+        # Метод добавляет новые записи в таблицу на странцие
+        # https://demoqa.com/webtables.
+        count = 1
+        while count != 0:
+            person_info = next(generated_person())
+            firstname = person_info.firstname
+            lastname = person_info.lastname
+            email = person_info.email
+            age = person_info.age
+            salary = person_info.salary
+            department = person_info.department
+            self.element_is_visible(self.ADD_BUTTON).click()
+            self.element_is_visible(self.FIRSTNAME_INPUT).send_keys(firstname)
+            self.element_is_visible(self.LASTNAME_INPUT).send_keys(lastname)
+            self.element_is_visible(self.EMAIL_INPUT).send_keys(email)
+            self.element_is_visible(self.AGE_INPUT).send_keys(age)
+            self.element_is_visible(self.SALARY_INPUT).send_keys(salary)
+            self.element_is_visible(self.DEPARTMENT_INPUT).send_keys(department)
+            self.element_is_visible(self.SUBMIT).click()
+            count -= 1
+            return firstname, lastname, email, age, salary, department

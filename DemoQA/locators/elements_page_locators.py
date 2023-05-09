@@ -46,3 +46,16 @@ class ButtonsPageLocators:
     SUCCESS_DOUBLE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
     SUCCESS_RIGHT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
     SUCCESS_CLICK_ME = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+
+
+class WebTableLocators:
+    # Класс, определяющий локаторы элементов для страницы с таблицами.
+    ADD_BUTTON = (By.CSS_SELECTOR, "button[id='addNewRecordButton']")
+    FIRSTNAME_INPUT = (By.CSS_SELECTOR, "input[id='firstName']")
+    LASTNAME_INPUT = (By.CSS_SELECTOR, "input[id='lastName']")
+    EMAIL_INPUT = (By.CSS_SELECTOR, "input[id='userEmail']")
+    AGE_INPUT = (By.CSS_SELECTOR, "input[id='age']")
+    SALARY_INPUT = (By.CSS_SELECTOR, "input[id='salary']")
+    DEPARTMENT_INPUT = (By.CSS_SELECTOR, "input[id='department']")
+    SUBMIT = (By.CSS_SELECTOR, "button[id='submit']")
+
