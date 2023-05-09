@@ -171,4 +171,25 @@ class WebTablePage(BasePage, WebTableLocators):
             self.element_is_visible(self.DEPARTMENT_INPUT).send_keys(department)
             self.element_is_visible(self.SUBMIT).click()
             count -= 1
-            return firstname, lastname, email, age, salary, department
+            return [firstname, lastname, str(age), email, str(salary),
+                    department]
+
+    def check_new_added_person(self):
+        # Метод для получения списка новых добавленных пользователей.
+        people_list = self.elements_are_present(self.FULL_PEOPLE_LIST)
+        data = []
+        for item in people_list:
+            data.append(item.text.splitlines())
+        return data
+
+    def search_some_person(self, key_word):
+        # Метод для поиска пользователя по заданному ключевому слову.
+        self.element_is_visible(self.SEARCH_INPUT).send_keys(key_word)
+
+    def check_search_person(self):
+        # Метод для получения данных найденного пользователя.
+        delete_button = self.element_is_present(self.DELETE_BUTTON)
+        row = delete_button.find_element("xpath", "//div[@class='rt-tr-group']")
+        return row.text.splitlines()
+
+
