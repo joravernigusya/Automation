@@ -1,5 +1,7 @@
 import random
 
+from selenium.webdriver.common.by import By
+
 from DemoQA.generator.generator import generated_person
 from DemoQA.locators.elements_page_locators import (
     TextBoxPageLocators,
@@ -168,7 +170,8 @@ class WebTablePage(BasePage, WebTableLocators):
             self.element_is_visible(self.EMAIL_INPUT).send_keys(email)
             self.element_is_visible(self.AGE_INPUT).send_keys(age)
             self.element_is_visible(self.SALARY_INPUT).send_keys(salary)
-            self.element_is_visible(self.DEPARTMENT_INPUT).send_keys(department)
+            self.element_is_visible(self.DEPARTMENT_INPUT).send_keys(
+                department)
             self.element_is_visible(self.SUBMIT).click()
             count -= 1
             return [firstname, lastname, str(age), email, str(salary),
@@ -189,7 +192,56 @@ class WebTablePage(BasePage, WebTableLocators):
     def check_search_person(self):
         # Метод для получения данных найденного пользователя.
         delete_button = self.element_is_present(self.DELETE_BUTTON)
-        row = delete_button.find_element("xpath", "//div[@class='rt-tr-group']")
+        row = delete_button.find_element("xpath",
+                                         "//div[@class='rt-tr-group']")
         return row.text.splitlines()
 
+    def update_person_info(self):
+        # Метод получает данные о человеке из генератора "generated_person()",
+        # затем обновляет возраст этого человека на странице таблицы и
+        # возвращает обновленный возраст в виде строки.
+        person_info = next(generated_person())
+        age = person_info.age
+        self.element_is_visible(self.UPDATE_BUTTON).click()
+        self.element_is_visible(self.AGE_INPUT).clear()
+        self.element_is_visible(self.AGE_INPUT).send_keys(age)
+        self.element_is_visible(self.SUBMIT).click()
+        return str(age)
 
+    def delete_person(self):
+        #  Метод удаляет человека из таблицы.
+        self.element_is_visible(self.DELETE_BUTTON).click()
+
+    def check_deleted(self):
+        # Метод проверяет, был ли удален человек из таблицы.
+        return self.element_is_present(self.NO_ROWS_FOUND).text
+
+    def select_up_to_some_rows(self):
+        # Метод проверяет, сколько строк отображается на каждой странице
+        # таблицы, изменяя количество строк на каждой странице с помощью
+        # выпадающего списка на странице и подсчитывая количество строк.
+        count = [5, 10, 20, 25, 50, 100]
+        data = []
+        for x in count:
+            count_row_button = self.element_is_present(self.COUNT_ROW_LIST)
+            self.go_to_element(count_row_button)
+            count_row_button.click()
+            self.element_is_visible(
+                (By.CSS_SELECTOR, f'option[value="{x}"]')).click()
+            data.append(self.check_count_rows())
+        return data
+
+    def check_count_rows(self):
+        # Метод проверяет количество строк на текущей странице таблицы.
+        list_rows = self.elements_are_present(self.FULL_PEOPLE_LIST)
+        return len(list_rows)
+
+    def remove_footer(self):
+        # Метод скрывает футер на странице веб-таблицы.
+        self.driver.execute_script(
+            "document.getElementsByTagName('footer')[0].remove();")
+
+    def remove_fixedban(self):
+        # Метод скрывает фиксированную панель на странице таблицы.
+        self.driver.execute_script(
+            "document.getElementById('fixedban').style.display = 'none'")
