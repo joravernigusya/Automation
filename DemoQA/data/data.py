@@ -1,8 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass as model
 
 
-@dataclass
+@model
 class Person:
+    # Это модель данных для человека.
     full_name: str = None
     firstname: str = None
     lastname: str = None

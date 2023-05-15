@@ -2,7 +2,7 @@ import random
 
 from selenium.webdriver.common.by import By
 
-from DemoQA.generator.generator import generated_person
+from DemoQA.utils.generator import generated_person
 from DemoQA.locators.elements_page_locators import (
     TextBoxPageLocators,
     CheckBoxLocators,
@@ -128,14 +128,14 @@ class ButtonsPage(BasePage, ButtonsPageLocators):
     def click_on_double_button(self):
         # Метод производит двойной клик на элементе, который является
         # видимым на странице.
-        self.action_double_click(
+        self.double_click(
             self.element_is_visible(self.DOUBLE_BUTTON))
         return self.check_clicked_on_the_button(self.SUCCESS_DOUBLE)
 
     def click_on_right_click_button(self):
         # Метод производит клик правой кнопкой мыши на элементе, который
         # является видимым на странице.
-        self.action_right_click(
+        self.right_click(
             self.element_is_visible(self.RIGHT_CLICK_BUTTON))
         return self.check_clicked_on_the_button(self.SUCCESS_RIGHT)
 
