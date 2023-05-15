@@ -1,5 +1,5 @@
 import random
-from DemoQA.data.data import Person
+from DemoQA.models.person_model import Person
 from faker import Faker
 
 faker_ru = Faker("ru_RU")

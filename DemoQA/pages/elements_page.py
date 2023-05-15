@@ -1,5 +1,7 @@
 import random
 
+import allure
+import requests
 from selenium.webdriver.common.by import By
 
 from DemoQA.utils.generator import generated_person
@@ -8,7 +10,8 @@ from DemoQA.locators.elements_page_locators import (
     CheckBoxLocators,
     RadioButtonPageLocators,
     ButtonsPageLocators,
-    WebTableLocators
+    WebTableLocators,
+    LinksPageLocators
 )
 from DemoQA.pages.base_page import BasePage
 
@@ -19,14 +22,6 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
     заполнения полей формы и проверки правильности заполнения формы
     """
 
-    def set_value(self, locator, value):
-        """
-        Метод устанавливает значение атрибута value для элемента, заданного
-        локатором.
-        """
-        element = self.element_is_visible(locator)
-        self.driver.execute_script(f"arguments[0].value = '{value}';", element)
-
     def get_attribute(self, locator, attribute_name):
         """
         Метод получает значение заданного атрибута элемента, заданного
@@ -35,6 +30,7 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
         element = self.element_is_visible(locator)
         return element.get_attribute(attribute_name)
 
+    @allure.step("Fill in all fields")
     def fill_all_fields(self):
         """
         Метод заполняет все поля на странице веб-формы и отправляет ее.
@@ -53,6 +49,7 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
         self.element_is_visible(self.SUBMIT).click()
         return full_name, email, current_address, permanent_address
 
+    @allure.step('check filled form')
     def check_filled_form(self):
         """
         Метод проверяет, заполнены ли все поля формы. Возвращает значения
@@ -70,10 +67,12 @@ class TextBoxPage(BasePage, TextBoxPageLocators):
 
 
 class CheckBoxPage(BasePage, CheckBoxLocators):
+    @allure.step('open full list')
     def open_full_list(self):
         # Метод раскрывает полный список чекбоксов на странице.
         self.element_is_visible(self.EXPAND_ALL_BUTTON).click()
 
+    @allure.step('click random items')
     def click_random_checkbox(self):
         # Метод выбирает случайный чекбокс из списка.
         item_list = self.elements_are_visible(self.ITEM_LIST)
@@ -87,6 +86,7 @@ class CheckBoxPage(BasePage, CheckBoxLocators):
             else:
                 break
 
+    @allure.step('get checked checkbox')
     def get_checked_checkboxes(self):
         # Метод возвращает список выбранных чекбоксов.
         checked_list = self.elements_are_present(self.CHECKED_ITEMS)
@@ -97,6 +97,7 @@ class CheckBoxPage(BasePage, CheckBoxLocators):
         return str(data).replace(' ', '').replace('doc', '').replace('.',
                                                                      '').lower()
 
+    @allure.step('get output result')
     def get_out_put_result(self):
         # Метод возвращает список результатов вывода.
         result_list = self.elements_are_present(self.OUTPUT_RESULT)
@@ -107,6 +108,7 @@ class CheckBoxPage(BasePage, CheckBoxLocators):
 
 
 class RadioButtonPage(BasePage, RadioButtonPageLocators):
+    @allure.step('click on the radiobutton')
     def click_on_the_radio_button(self, choice):
         """
         Метод для щелчка по радиокнопке на странице.
@@ -116,6 +118,7 @@ class RadioButtonPage(BasePage, RadioButtonPageLocators):
                    'no': self.NO_RADIO_BUTTON}
         self.element_is_visible(choices[choice]).click()
 
+    @allure.step('get output result')
     def get_output_result(self):
         """
         Метод для получения результата вывода на странице.
@@ -124,7 +127,7 @@ class RadioButtonPage(BasePage, RadioButtonPageLocators):
 
 
 class ButtonsPage(BasePage, ButtonsPageLocators):
-
+    @allure.step('click on double button')
     def click_on_double_button(self):
         # Метод производит двойной клик на элементе, который является
         # видимым на странице.
@@ -132,6 +135,7 @@ class ButtonsPage(BasePage, ButtonsPageLocators):
             self.element_is_visible(self.DOUBLE_BUTTON))
         return self.check_clicked_on_the_button(self.SUCCESS_DOUBLE)
 
+    @allure.step('click on right click button')
     def click_on_right_click_button(self):
         # Метод производит клик правой кнопкой мыши на элементе, который
         # является видимым на странице.
@@ -139,12 +143,14 @@ class ButtonsPage(BasePage, ButtonsPageLocators):
             self.element_is_visible(self.RIGHT_CLICK_BUTTON))
         return self.check_clicked_on_the_button(self.SUCCESS_RIGHT)
 
+    @allure.step("click on right 'click me' button")
     def click_on_click_me_button(self):
         # Метод производит клик на элементе, который является видимым на
         # странице.
         self.element_is_visible(self.CLICK_ME_BUTTON).click()
         return self.check_clicked_on_the_button(self.SUCCESS_CLICK_ME)
 
+    @allure.step('check clicked button')
     def check_clicked_on_the_button(self, button_locator):
         # Метод проверяет, был ли произведен клик на кнопке с указанным
         # локатором и возвращает текст, который содержится в этой кнопке.
@@ -152,6 +158,7 @@ class ButtonsPage(BasePage, ButtonsPageLocators):
 
 
 class WebTablePage(BasePage, WebTableLocators):
+    @allure.step('add new person')
     def add_new_person(self):
         # Метод добавляет новые записи в таблицу на странцие
         # https://demoqa.com/webtables.
@@ -177,6 +184,7 @@ class WebTablePage(BasePage, WebTableLocators):
             return [firstname, lastname, str(age), email, str(salary),
                     department]
 
+    @allure.step('check added people')
     def check_new_added_person(self):
         # Метод для получения списка новых добавленных пользователей.
         people_list = self.elements_are_present(self.FULL_PEOPLE_LIST)
@@ -185,10 +193,12 @@ class WebTablePage(BasePage, WebTableLocators):
             data.append(item.text.splitlines())
         return data
 
+    @allure.step('find some person')
     def search_some_person(self, key_word):
         # Метод для поиска пользователя по заданному ключевому слову.
         self.element_is_visible(self.SEARCH_INPUT).send_keys(key_word)
 
+    @allure.step('check found person')
     def check_search_person(self):
         # Метод для получения данных найденного пользователя.
         delete_button = self.element_is_present(self.DELETE_BUTTON)
@@ -196,6 +206,7 @@ class WebTablePage(BasePage, WebTableLocators):
                                          "//div[@class='rt-tr-group']")
         return row.text.splitlines()
 
+    @allure.step('update person information')
     def update_person_info(self):
         # Метод получает данные о человеке из генератора "generated_person()",
         # затем обновляет возраст этого человека на странице таблицы и
@@ -208,14 +219,17 @@ class WebTablePage(BasePage, WebTableLocators):
         self.element_is_visible(self.SUBMIT).click()
         return str(age)
 
+    @allure.step('delete person')
     def delete_person(self):
         #  Метод удаляет человека из таблицы.
         self.element_is_visible(self.DELETE_BUTTON).click()
 
+    @allure.step('check deleted person')
     def check_deleted(self):
         # Метод проверяет, был ли удален человек из таблицы.
         return self.element_is_present(self.NO_ROWS_FOUND).text
 
+    @allure.step('select up to some rows')
     def select_up_to_some_rows(self):
         # Метод проверяет, сколько строк отображается на каждой странице
         # таблицы, изменяя количество строк на каждой странице с помощью
@@ -231,17 +245,45 @@ class WebTablePage(BasePage, WebTableLocators):
             data.append(self.check_count_rows())
         return data
 
+    @allure.step('check count rows')
     def check_count_rows(self):
         # Метод проверяет количество строк на текущей странице таблицы.
         list_rows = self.elements_are_present(self.FULL_PEOPLE_LIST)
         return len(list_rows)
 
+    @allure.step('remove footer')
     def remove_footer(self):
         # Метод скрывает футер на странице веб-таблицы.
         self.driver.execute_script(
             "document.getElementsByTagName('footer')[0].remove();")
 
+    @allure.step('remove fixedban')
     def remove_fixedban(self):
         # Метод скрывает фиксированную панель на странице таблицы.
         self.driver.execute_script(
             "document.getElementById('fixedban').style.display = 'none'")
+
+
+class LinksPage(BasePage, LinksPageLocators):
+    @allure.step('check simple link')
+    def check_new_tab_simple_link(self):
+        # Метод проверяет простую ссылку на веб-странице.
+        simple_link = self.element_is_visible(self.SIMPLE_LINK)
+        link_href = simple_link.get_attribute('href')
+        request = requests.get(link_href)
+        if request.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, request.status_code
+
+    @allure.step('check broken link')
+    def check_broken_link(self, url):
+        # Метод проверяет нерабочую ссылку на веб-странице.
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.BAD_REQUEST).click()
+        else:
+            return request.status_code

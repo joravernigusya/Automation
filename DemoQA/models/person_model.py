@@ -3,7 +3,7 @@ from dataclasses import dataclass as model
 
 @model
 class Person:
-    # Это модель данных для человека.
+    # Модель данных для человека.
     full_name: str = None
     firstname: str = None
     lastname: str = None
