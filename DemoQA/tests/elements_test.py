@@ -1,10 +1,12 @@
 import time
-import pytest
-from DemoQA.pages.elements_page import \
-    (TextBoxPage,
-     CheckBoxPage,
-     RadioButtonPage)
-
+import random
+from DemoQA.pages.elements_page import (
+    TextBoxPage,
+    CheckBoxPage,
+    RadioButtonPage,
+    ButtonsPage,
+    WebTablePage,
+)
 
 
 class TestElements:
@@ -15,42 +17,30 @@ class TestElements:
             заполняет все поля на странице, проверяет заполнение формы и
             сверяет заполненные данные с данными, которые получились на выходе.
             """
-            # Входные данные
-            full_name = "Yan"
-            email = "yan@gmail.com"
-            current_address = "Msw"
-            permanent_address = "Msw"
-
-            # Инициализация страницы
             text_box_page = TextBoxPage(driver, "https://demoqa.com/text-box")
             text_box_page.open()
-
-            # Заполнение полей формы
-            text_box_page.set_value(text_box_page.FULL_NAME, full_name)
-            text_box_page.set_value(text_box_page.EMAIL, email)
-            text_box_page.set_value(text_box_page.CURRENT_ADDRESS,
-                                    current_address)
-            text_box_page.set_value(text_box_page.PERMANENT_ADDRESS,
-                                    permanent_address)
-            text_box_page.element_is_visible(text_box_page.SUBMIT).click()
-
-            # Получение заполненных данных
+            (
+                full_name,
+                email,
+                current_address,
+                permanent_address,
+            ) = text_box_page.fill_all_fields()
             (
                 output_name,
                 output_email,
                 output_cur_addr,
                 output_per_addr,
             ) = text_box_page.check_filled_form()
-
-            # Проверка заполненных данных
-            assert output_name == "Name:" + full_name, "Имя не совпадает"
-            assert output_email == "Email:" + email, "Почта не совпадает"
+            time.sleep(10)
+            assert full_name == output_name, "The full name does not match"
+            assert email == output_email, "The email does not match"
+            assert current_address == output_cur_addr, (
+                "The current address " "does not match"
+            )
             assert (
-                    output_cur_addr.strip() == "Current Address :" + current_address
-            ), "Текущий адрес не совпадает"
-            assert (
-                    output_per_addr.strip() == "Permananet Address :" + permanent_address
-            ), "Постоянный адрес не совпадает"
+                    "Permananet Address :" + permanent_address ==
+                    output_per_addr
+            ), "The permanent address does not match"
 
     class TestCheckBox:
         def test_check_box(self, driver):
@@ -65,7 +55,6 @@ class TestElements:
             check_box_page.click_random_checkbox()
             input_checkbox = check_box_page.get_checked_checkboxes()
             output_result = check_box_page.get_out_put_result()
-            time.sleep(5)
             assert input_checkbox == output_result, "Чекбоксы не были выбраны"
 
     class TestRadioButton:
@@ -74,8 +63,9 @@ class TestElements:
             Тест открывает страницу "https://demoqa.com/radio-button" и
             проверяет функциональность радиокнопок.
             """
-            radio_button_page = RadioButtonPage(driver,
-                                                "https://demoqa.com/radio-button")
+            radio_button_page = RadioButtonPage(
+                driver, "https://demoqa.com/radio-button"
+            )
             radio_button_page.open()
 
             # Выбор кнопки "Yes" и проверка результата
@@ -90,6 +80,95 @@ class TestElements:
             radio_button_page.click_on_the_radio_button("no")
             output_no = radio_button_page.get_output_result()
 
-            assert output_yes == "Yes", "Yes не выбран"
-            assert output_impressive == "Impressive", "Impressive не выбран"
-            assert output_no == "No", "No не выбран"
+            assert output_yes == "Yes", "'Yes' was not selected"
+            assert output_impressive == "Impressive", "'Impressive' was not " \
+                                                      "selected"
+            assert output_no == "No", "'No' was not selected"
+
+    class TestButtonsPage:
+        def test_different_click_on_the_buttons(self, driver):
+            """
+            Тест открывает страницу "https://demoqa.com/buttons" и
+            проверяет корректность работы кнопок.
+            """
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+            double_text = button_page.click_on_double_button()
+            right_text = button_page.click_on_right_click_button()
+            click_text = button_page.click_on_click_me_button()
+            assert (
+                    double_text == "You have done a double click"
+            ), "The double click button was not pressed"
+            assert (
+                    right_text == "You have done a right click"
+            ), "The right click button was not pressed"
+            assert (
+                    click_text == "You have done a dynamic click"
+            ), "The dynamic click button was not pressed"
+
+    class TestWebTable:
+        def test_web_table_add_person(self, driver):
+            """
+            Тест проверяет добавление новой записи в таблицу на странице
+            https://demoqa.com/webtables и проверяет, что добавленная запись
+            появляется в таблице.
+            """
+            web_table_page = WebTablePage(driver,
+                                          "https://demoqa.com/webtables")
+            web_table_page.open()
+            new_person = web_table_page.add_new_person()
+            table_result = web_table_page.check_new_added_person()
+            assert new_person in table_result, "The person was not found in " \
+                                               "the table"
+
+        def test_web_table_search_person(self, driver):
+            """
+            Тест проверяет поиск записи в таблице на странице
+            https://demoqa.com/webtables и проверяет, что найденная запись
+            присутствует в таблице.
+            """
+            web_table_page = WebTablePage(driver,
+                                          "https://demoqa.com/webtables")
+            web_table_page.open()
+            key_word = web_table_page.add_new_person()[random.randint(0, 5)]
+            web_table_page.search_some_person(key_word)
+            table_result = web_table_page.check_search_person()
+            assert key_word in table_result, "The person was not found in " \
+                                             "the table"
+
+        def test_web_table_update_person_info(self, driver):
+            # Тест проверяет обновление информации о человеке на странице
+            # https://demoqa.com/webtables.
+            web_table_page = WebTablePage(driver,
+                                          "https://demoqa.com/webtables")
+            web_table_page.open()
+            lastname = web_table_page.add_new_person()[1]
+            web_table_page.search_some_person(lastname)
+            age = web_table_page.update_person_info()
+            row = web_table_page.check_search_person()
+            assert age in row, "The person card has not been changed"
+
+        def test_web_table_delete_person(self, driver):
+            # Тест проверяет удаление человека на странице
+            # https://demoqa.com/webtables из таблицы
+            web_table_page = WebTablePage(driver,
+                                          "https://demoqa.com/webtables")
+            web_table_page.open()
+            email = web_table_page.add_new_person()[3]
+            web_table_page.search_some_person(email)
+            web_table_page.delete_person()
+            text = web_table_page.check_deleted()
+            assert text == "No rows found"
+
+        def test_web_table_change_count_row(self, driver):
+            # Тест проверяет изменение количества отображаемых строк в
+            # таблице на странице https://demoqa.com/webtables.
+            web_table_page = WebTablePage(driver,
+                                          'https://demoqa.com/webtables')
+            web_table_page.open()
+            web_table_page.remove_footer()
+            web_table_page.remove_fixedban()
+            count = web_table_page.select_up_to_some_rows()
+            assert count == [5, 10, 20, 25, 50,
+                             100], 'The number of rows in the table has not ' \
+                                   'been changed or has changed incorrectly'

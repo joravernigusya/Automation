@@ -35,3 +35,38 @@ class RadioButtonPageLocators:
     NO_RADIO_BUTTON = (
         By.CSS_SELECTOR, "label[class^='custom-control'][for='noRadio']")
     OUTPUT_RESULT = (By.CSS_SELECTOR, "span[class='text-success']")
+
+
+class ButtonsPageLocators:
+    # Класс, определяющий локаторы элементов для старницы с кнопками.
+    DOUBLE_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    CLICK_ME_BUTTON = (By.XPATH, "//button[. = 'Click Me'] ")
+
+    SUCCESS_DOUBLE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    SUCCESS_RIGHT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    SUCCESS_CLICK_ME = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+
+
+class WebTableLocators:
+    # Класс, определяющий локаторы элементов для страницы с таблицами.
+    ADD_BUTTON = (By.CSS_SELECTOR, "button[id='addNewRecordButton']")
+    FIRSTNAME_INPUT = (By.CSS_SELECTOR, "input[id='firstName']")
+    LASTNAME_INPUT = (By.CSS_SELECTOR, "input[id='lastName']")
+    EMAIL_INPUT = (By.CSS_SELECTOR, "input[id='userEmail']")
+    AGE_INPUT = (By.CSS_SELECTOR, "input[id='age']")
+    SALARY_INPUT = (By.CSS_SELECTOR, "input[id='salary']")
+    DEPARTMENT_INPUT = (By.CSS_SELECTOR, "input[id='department']")
+    SUBMIT = (By.CSS_SELECTOR, "button[id='submit']")
+
+    FULL_PEOPLE_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
+    SEARCH_INPUT = (By.CSS_SELECTOR, "input[id='searchBox']")
+    DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+    ROW_PARENT = (By.XPATH, ".//ancestor::div[@class='rt-tr-group']")
+    NO_ROWS_FOUND = (By.CSS_SELECTOR, 'div[class="rt-noData"]')
+
+    UPDATE_BUTTON = (By.CSS_SELECTOR, 'span[title="Edit"]')
+    COUNT_ROW_LIST = (By.CSS_SELECTOR, 'select[aria-label="rows per page"]')
+
+
+
