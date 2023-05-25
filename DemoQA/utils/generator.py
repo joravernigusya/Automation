@@ -23,3 +23,13 @@ def generated_person():
         current_address=faker_ru.address(),
         permanent_address=faker_ru.address(),
     )
+
+
+def generated_file():
+    # Функция создает случайный файл и записывает в него случайное сообщение.
+    path = rf'C:\Users\Yan\Desktop\PythonAutomation\filetest' \
+           rf'{random.randint(0, 999)}.txt'
+    file = open(path, 'w+')
+    file.write(f'Ola, amigo!{random.randint(0, 999)}')
+    file.close()
+    return file.name, path
