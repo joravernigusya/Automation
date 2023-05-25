@@ -69,4 +69,7 @@ class WebTableLocators:
     COUNT_ROW_LIST = (By.CSS_SELECTOR, 'select[aria-label="rows per page"]')
 
 
-
+class LinksPageLocators:
+    # Класс, определяющий локаторы ссылок для страницы с ссылками.
+    SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    BAD_REQUEST = (By.CSS_SELECTOR, "a[id='bad-request']")
