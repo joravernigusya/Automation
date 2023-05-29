@@ -1,9 +1,11 @@
 import base64
 import os
 import random
+import time
 
 import allure
 import requests
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
 from DemoQA.utils.generator import generated_person, generated_file
@@ -14,7 +16,8 @@ from DemoQA.locators.elements_page_locators import (
     ButtonsPageLocators,
     WebTableLocators,
     LinksPageLocators,
-    UploadAndDownloadPageLocators
+    UploadAndDownloadPageLocators,
+    DynamicPropertiesPageLocators
 )
 from DemoQA.pages.base_page import BasePage
 
@@ -317,3 +320,32 @@ class UploadAndDownloadPage(BasePage, UploadAndDownloadPageLocators):
             f.close()
         os.remove(path_name_file)
         return check_file
+
+
+class DynamicPropertiesPage(BasePage, DynamicPropertiesPageLocators):
+    @allure.step('check enable button')
+    def check_enable_button(self):
+        # Метод проверяет, доступна ли кнопка для нажатия.
+        try:
+            self.elements_is_clickable(self.ENABLE_BUTTON)
+        except TimeoutException:
+            return False
+        return True
+
+    @allure.step('check changed of color')
+    def check_changed_of_color(self):
+        # Метод проверяет изменение цвета кнопки.
+        color_button = self.element_is_present(self.COLOR_CHANGE_BUTTON)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    @allure.step('check appear of button')
+    # Метод проверяет появление кнопки после пяти секунд ожидания.
+    def check_appear_of_button(self):
+        try:
+            self.element_is_visible(self.VISIBLE_AFTER_FIVE_SEC_BUTTON)
+        except TimeoutException:
+            return False
+        return True
