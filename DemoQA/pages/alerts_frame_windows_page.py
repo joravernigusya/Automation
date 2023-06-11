@@ -5,7 +5,7 @@ import allure
 from selenium.common import UnexpectedAlertPresentException
 
 from DemoQA.locators.alerts_frame_windows_locators import \
-    BrowserWindowsPageLocators, AlertsPageLocators
+    BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
 from DemoQA.pages.base_page import BasePage
 
 
@@ -70,3 +70,25 @@ class AlertsPage(BasePage, AlertsPageLocators):
         alert_window.accept()
         text_result = self.element_is_present(self.PROMPT_RESULT).text
         return text, text_result
+
+
+class FramesPage(BasePage, FramesPageLocators):
+    @allure.step('check frame')
+    # Метод проверяет фрейм.
+    def check_frame(self, frame_num):
+        if frame_num == 'frame1':
+            frame = self.element_is_present(self.FIRST_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(self.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
+        if frame_num == 'frame2':
+            frame = self.element_is_present(self.SECOND_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(self.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
