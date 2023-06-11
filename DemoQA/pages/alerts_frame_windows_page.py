@@ -5,7 +5,8 @@ import allure
 from selenium.common import UnexpectedAlertPresentException
 
 from DemoQA.locators.alerts_frame_windows_locators import \
-    BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
+    BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, \
+    NestedFramesPageLocators
 from DemoQA.pages.base_page import BasePage
 
 
@@ -92,3 +93,15 @@ class FramesPage(BasePage, FramesPageLocators):
             text = self.element_is_present(self.TITLE_FRAME).text
             self.driver.switch_to.default_content()
             return [text, width, height]
+
+class NestedFramesPage(BasePage, NestedFramesPageLocators):
+    @allure.step('check nested frame')
+    # Метод проверяет вложенный фрейм.
+    def check_nested_frame(self):
+        parent_frame = self.element_is_present(self.PARENT_FRAME)
+        self.driver.switch_to.frame(parent_frame)
+        parent_text = self.element_is_present(self.PARENT_TEXT).text
+        child_frame = self.element_is_present(self.CHILD_FRAME)
+        self.driver.switch_to.frame(child_frame)
+        child_text = self.element_is_present(self.CHILD_TEXT).text
+        return parent_text, child_text
