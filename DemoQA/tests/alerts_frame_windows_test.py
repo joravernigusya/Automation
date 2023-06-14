@@ -3,7 +3,8 @@ import allure
 from DemoQA.pages.alerts_frame_windows_page import (
     BrowserWindowsPage,
     AlertsPage,
-    FramesPage
+    FramesPage,
+    NestedFramesPage, ModalDialogsPage
 )
 
 
@@ -81,3 +82,29 @@ class TestAlertsFrameWindow:
                                      '350px'], 'The frame does not exist'
             assert result_frame2 == ['This is a sample page', '100px',
                                      '100px'], 'The frame does not exist'
+
+    @allure.feature('Nested Page')
+    class TestNestedFramesPage:
+        @allure.title('Check the page with nested frames')
+        # Тест проверяет страницу с вложенными фреймами.
+        def test_nested_frames(self, driver):
+            nested_frame_page = NestedFramesPage(driver,
+                                                 'https://demoqa.com/nestedframes')
+            nested_frame_page.open()
+            parent_text, child_text = nested_frame_page.check_nested_frame()
+            assert parent_text == 'Parent frame', 'Nested frame does not exist'
+            assert child_text == 'Child Iframe', 'Nested frame does not exist'
+
+    @allure.feature('Modal Dialog Page')
+    class TestModalDialogsPage:
+        @allure.title('Check the page with modal dialogs')
+        def test_modal_dialogs(self, driver):
+            # Тест для проверки функциональности модальных диалогов на странице.
+            modal_dialogs_page = ModalDialogsPage(driver,
+                                                  'https://demoqa.com/modal-dialogs')
+            modal_dialogs_page.open()
+            small, large = modal_dialogs_page.check_modal_dialogs()
+            assert small[1] < large[
+                1], 'text from large dialog is less than text from small dialog'
+            assert small[0] == 'Small Modal', 'The header is not "Small modal"'
+            assert large[0] == 'Large Modal', 'The header is not "Large modal"'
